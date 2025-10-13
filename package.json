@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@markuplint/html-spec": "^4.16.0",
+    "markuplint": "^4.13.1"
+  },
+  "scripts": {
+    "lint:html": "markuplint \"src/main/resources/templates/**/*.html\""
+  }
+}

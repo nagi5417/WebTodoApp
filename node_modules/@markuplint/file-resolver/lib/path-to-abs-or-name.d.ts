@@ -1,0 +1,1 @@
+export declare function relPathToNameOrAbsPath<T extends string | readonly (string | Record<string, unknown>)[] | Readonly<Record<string, unknown>> | undefined>(dir: string, filePath?: T, resolveProps?: readonly string[], resolveKey?: boolean): Promise<T>;

@@ -1,0 +1,1 @@
+{"nodeRules":[{"selector":":where(meta[property])","rules":{"invalid-attr":{"options":{"allowAttrs":[{"name":"property","value":{"type":"NoEmptyAny"}},{"name":"content","value":{"type":"NoEmptyAny"}}]}},"required-attr":false}}]}

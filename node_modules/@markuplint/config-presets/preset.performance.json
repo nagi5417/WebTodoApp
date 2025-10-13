@@ -1,0 +1,1 @@
+{"nodeRules":[{"selector":":where(head)","rules":{"required-element":["meta[charset=\"UTF-8\" i]"]}},{"selector":":where(script[src]:not([type=module]))","rules":{"required-attr":["defer"]}},{"selector":":where(img[src])","rules":{"required-attr":["width","height"]}},{"selector":":where(iframe)","rules":{"required-attr":["title",{"name":"loading","value":"lazy"}]}}]}

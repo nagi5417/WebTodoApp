@@ -1,0 +1,118 @@
+/* ベース設定 */
+body {
+  font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  margin: 40px;
+  line-height: 1.6;
+}
+
+/* タイトル */
+.title {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #ffffff;
+  border-bottom: 2px solid #555;
+  padding-bottom: 10px;
+}
+
+/* フォーム関連 */
+form {
+  background-color: #2b2b2b;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  margin-bottom: 30px;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="datetime-local"],
+select {
+  width: 100%;
+  padding: 8px 12px;
+  margin-top: 5px;
+  background-color: #3b3b3b;
+  border: 1px solid #666;
+  border-radius: 5px;
+  color: #fff;
+}
+
+input[type="submit"] {
+  margin-top: 20px;
+  background-color: #0077cc;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #005fa3;
+}
+
+/* エラーメッセージ */
+div[th\:if*="hasErrors"] {
+  color: #ff6b6b;
+  margin-top: 5px;
+}
+
+/* タスクリストのテーブル */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #444;
+}
+
+td a,
+td input[type="submit"] {
+  background-color: #444;
+  color: #eee;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+td a:hover,
+td input[type="submit"]:hover {
+  background-color: #666;
+}
+
+/* h3 タイトル */
+h3 {
+  border-left: 6px solid #0077cc;
+  padding-left: 10px;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+/* 絞り込みボタンエリア */
+div[style*="margin:10px"] {
+  margin-top: 30px;
+}
+
+/* 戻るリンク */
+p a {
+  color: #0077cc;
+  text-decoration: none;
+}
+
+p a:hover {
+  text-decoration: underline;
+}
