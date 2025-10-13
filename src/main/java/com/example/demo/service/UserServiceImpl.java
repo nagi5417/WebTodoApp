@@ -137,11 +137,100 @@ public class UserServiceImpl implements UserService {
 
     /**
      * ユーザーを保存
-     * 
+     *
      * @param user 保存するユーザー
      * @return 保存されたユーザー
      */
     public User save(User user) {
         return userDao.save(user);
+    }
+
+    /**
+     * ユーザー設定を更新
+     *
+     * @param userId ユーザーID
+     * @param email 新しいメールアドレス
+     * @param username 新しいユーザー名
+     * @param password 新しいパスワード（nullの場合は変更なし）
+     */
+    @Transactional
+    public void updateUserSettings(Long userId, String email, String username, String password) {
+        logger.debug("Updating user settings for userId: {}", userId);
+
+        User user = userDao.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        // メールアドレスとユーザー名を更新
+        user.setEmail(email);
+        user.setUsername(username);
+
+        // パスワードが指定されている場合は暗号化して更新
+        if (password != null && !password.isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(password);
+            user.setPassword(encodedPassword);
+            logger.debug("Password updated for userId: {}", userId);
+        }
+
+        userDao.save(user);
+        logger.debug("User settings updated successfully for userId: {}", userId);
+    }
+
+    /**
+     * ユーザー設定を部分的に更新
+     * nullまたは空文字列のフィールドは更新しない
+     *
+     * @param userId ユーザーID
+     * @param email 新しいメールアドレス（nullの場合は変更なし）
+     * @param username 新しいユーザー名（nullの場合は変更なし）
+     * @param password 新しいパスワード（nullの場合は変更なし）
+     */
+    @Transactional
+    public void updateUserSettingsPartial(Long userId, String email, String username, String password) {
+        logger.debug("Partially updating user settings for userId: {}", userId);
+
+        User user = userDao.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        boolean updated = false;
+
+        // メールアドレスが指定されている場合のみ更新
+        if (email != null && !email.trim().isEmpty()) {
+            user.setEmail(email);
+            updated = true;
+            logger.debug("Email updated for userId: {}", userId);
+        }
+
+        // ユーザー名が指定されている場合のみ更新
+        if (username != null && !username.trim().isEmpty()) {
+            user.setUsername(username);
+            updated = true;
+            logger.debug("Username updated for userId: {}", userId);
+        }
+
+        // パスワードが指定されている場合のみ暗号化して更新
+        if (password != null && !password.trim().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(password);
+            user.setPassword(encodedPassword);
+            updated = true;
+            logger.debug("Password updated for userId: {}", userId);
+        }
+
+        if (updated) {
+            userDao.save(user);
+            logger.debug("User settings partially updated successfully for userId: {}", userId);
+        } else {
+            logger.debug("No fields to update for userId: {}", userId);
+        }
+    }
+
+    /**
+     * IDでユーザーを取得
+     *
+     * @param userId ユーザーID
+     * @return 見つかったユーザー、存在しない場合はnull
+     */
+    @Transactional(readOnly = true)
+    public User findById(Long userId) {
+        return userDao.findById(userId).orElse(null);
     }
 }
