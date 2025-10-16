@@ -1,3 +1,4 @@
+-- PostgreSQL対応: ALTER COLUMN構文はPostgreSQLと互換性あり
 -- （保険）NULL があれば埋める
 UPDATE task SET type_id = 1 WHERE type_id IS NULL;
 

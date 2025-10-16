@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TaskServiceImplの単体テスト" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-10-16T12:26:32" hostname="MacBook-3.local" time="0.214">
+  <properties/>
+  <testcase name="テーブルtaskの全件取得で0件の場合のテスト" classname="com.example.demo.service.TaskServiceImplUnitTest" time="0.208"/>
+  <testcase name="タスクを1件取得した場合のテスト" classname="com.example.demo.service.TaskServiceImplUnitTest" time="0.001"/>
+  <testcase name="削除対象が存在しない場合、例外が発生することを確認するテスト" classname="com.example.demo.service.TaskServiceImplUnitTest" time="0.001"/>
+  <testcase name="タスクが取得できない場合のテスト" classname="com.example.demo.service.TaskServiceImplUnitTest" time="0.001"/>
+  <testcase name="テーブルTaskの全件取得で2件の場合のテスト" classname="com.example.demo.service.TaskServiceImplUnitTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

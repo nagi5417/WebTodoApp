@@ -59,12 +59,12 @@ public class UserDaoTest {
     }
 
     // =========================
-    // findOptionalByEmail のテスト
+    // findByEmail のテスト
     // =========================
 
     @Test
-    void findOptionalByEmail_存在するメール_正しく取得される() {
-        Optional<User> result = userDao.findOptionalByEmail("test@example.com");
+    void findByEmail_存在するメール_正しく取得される() {
+        Optional<User> result = userDao.findByEmail("test@example.com");
 
         assertTrue(result.isPresent());
 
@@ -75,22 +75,22 @@ public class UserDaoTest {
     }
 
     @Test
-    void findOptionalByEmail_存在しないメール_空のOptional() {
-        Optional<User> result = userDao.findOptionalByEmail("nonexistent@example.com");
+    void findByEmail_存在しないメール_空のOptional() {
+        Optional<User> result = userDao.findByEmail("nonexistent@example.com");
 
         assertFalse(result.isPresent());
     }
 
     @Test
-    void findOptionalByEmail_nullのメール_空のOptional() {
-        Optional<User> result = userDao.findOptionalByEmail(null);
+    void findByEmail_nullのメール_空のOptional() {
+        Optional<User> result = userDao.findByEmail(null);
 
         assertFalse(result.isPresent());
     }
 
     @Test
-    void findOptionalByEmail_空のメール_空のOptional() {
-        Optional<User> result = userDao.findOptionalByEmail("");
+    void findByEmail_空のメール_空のOptional() {
+        Optional<User> result = userDao.findByEmail("");
 
         assertFalse(result.isPresent());
     }
@@ -133,7 +133,7 @@ public class UserDaoTest {
 
     @Test
     void メソッドの整合性_存在するメールで両方一致() {
-        Optional<User> findResult = userDao.findOptionalByEmail("test@example.com");
+        Optional<User> findResult = userDao.findByEmail("test@example.com");
         boolean existsResult = userDao.existsByEmail("test@example.com");
 
         assertTrue(findResult.isPresent());
@@ -142,7 +142,7 @@ public class UserDaoTest {
 
     @Test
     void メソッドの整合性_存在しないメールで両方不一致() {
-        Optional<User> findResult = userDao.findOptionalByEmail("nonexistent@example.com");
+        Optional<User> findResult = userDao.findByEmail("nonexistent@example.com");
         boolean existsResult = userDao.existsByEmail("nonexistent@example");
 
         assertFalse(findResult.isPresent());

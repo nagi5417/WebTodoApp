@@ -35,7 +35,19 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setup() {
-        userService = new UserServiceImpl(userDao, passwordEncoder);
+        userService = new UserServiceImpl();
+        // リフレクションを使ってフィールドを注入
+        try {
+            java.lang.reflect.Field userDaoField = UserServiceImpl.class.getDeclaredField("userDao");
+            userDaoField.setAccessible(true);
+            userDaoField.set(userService, userDao);
+
+            java.lang.reflect.Field passwordEncoderField = UserServiceImpl.class.getDeclaredField("passwordEncoder");
+            passwordEncoderField.setAccessible(true);
+            passwordEncoderField.set(userService, passwordEncoder);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

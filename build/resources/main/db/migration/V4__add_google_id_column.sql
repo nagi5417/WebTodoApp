@@ -1,3 +1,4 @@
+-- PostgreSQL対応: VARCHAR、CREATE INDEXはPostgreSQLと互換性あり
 -- Google IDカラムを追加
 ALTER TABLE users ADD COLUMN google_id VARCHAR(255);
 
