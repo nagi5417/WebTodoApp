@@ -51,7 +51,7 @@ public class SecurityConfig {
             .antMatchers("/h2-console/**", "/users/login", "/users/register",
                         "/css/**", "/js/**", "/*.png",
                         "/*.ico", "/images/**", "/api/auth/**", "/error",
-                        "/login/oauth2/code/**", "/api/auth/oauth2/success")
+                        "/oauth2/**", "/login/oauth2/**", "/api/auth/oauth2/success")
             .permitAll()
             .antMatchers("/api/tasks/**").authenticated() // タスクAPIは認証必須
             .anyRequest().authenticated()
@@ -59,6 +59,11 @@ public class SecurityConfig {
             .oauth2Login()
             .loginPage("/users/login")
             .defaultSuccessUrl("/api/auth/oauth2/success", true)
+            .redirectionEndpoint()
+            .baseUri("/login/oauth2/code/*")
+            .and()
+            .userInfoEndpoint()
+            .and()
             .and()
             .formLogin()
             .loginPage("/users/login")

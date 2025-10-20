@@ -1,6 +1,7 @@
 # Compiled class files
 *.class
 target/
+build/
 
 # Log files
 *.log
@@ -29,3 +30,7 @@ Thumbs.db
 # Application properties (機密情報がある場合)
 # application-local.properties
 # application-prod.properties
+
+# Environment variables
+.env
+.env.local

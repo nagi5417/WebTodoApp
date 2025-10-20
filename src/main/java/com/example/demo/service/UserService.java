@@ -23,4 +23,13 @@ public interface UserService {
     // ユーザーを保存
     User save(User user);
 
+    // ユーザー設定を更新（メール、ユーザー名、パスワード）
+    void updateUserSettings(Long userId, String email, String username, String password);
+
+    // ユーザー設定を部分的に更新（nullのフィールドは更新しない）
+    void updateUserSettingsPartial(Long userId, String email, String username, String password);
+
+    // IDでユーザーを取得
+    User findById(Long userId);
+
 }
