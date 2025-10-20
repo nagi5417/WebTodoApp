@@ -1,0 +1,515 @@
+openapi: 3.0.0
+info:
+  title: WebToDoApp API
+  version: 1.0.0
+  description: |
+    タスク管理システムのREST API仕様書
+
+    ## 認証について
+    このAPIは以下の認証方式をサポートしています:
+    - **セッション認証** (Cookie: JSESSIONID)
+    - **OAuth2認証** (Google Sign-In)
+
+    ## ベースURL
+    - 開発環境: http://localhost:8080
+
+servers:
+  - url: http://localhost:8080
+    description: ローカル開発環境
+
+security:
+  - sessionAuth: []
+
+tags:
+  - name: Tasks
+    description: タスク管理API
+  - name: Auth
+    description: 認証・認可API
+
+paths:
+  # ========================================
+  # タスク管理API
+  # ========================================
+  /api/tasks:
+    get:
+      summary: タスク一覧取得
+      description: ログインユーザーに紐づく全タスクを取得します
+      tags:
+        - Tasks
+      security:
+        - sessionAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  value:
+                    status: success
+                    message: タスク一覧を取得しました
+                    data:
+                      - id: 1
+                        userId: 1
+                        typeId: 1
+                        title: サンプルタスク
+                        detail: タスクの詳細説明
+                        deadline: "2025-12-31T23:59:59"
+                        taskType:
+                          id: 1
+                          type: 仕事
+                          comment: 業務関連タスク
+        '400':
+          description: エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                error:
+                  value:
+                    status: error
+                    message: ユーザーが見つかりません
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+    post:
+      summary: タスク作成
+      description: 新しいタスクを作成します
+      tags:
+        - Tasks
+      security:
+        - sessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskRequest'
+            examples:
+              example1:
+                value:
+                  typeId: 1
+                  title: 新しいタスク
+                  detail: タスクの詳細説明
+                  deadline: "2025-12-31"
+      responses:
+        '200':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  value:
+                    status: success
+                    message: タスクを作成しました
+                    data:
+                      id: 10
+                      userId: 1
+                      typeId: 1
+                      title: 新しいタスク
+                      detail: タスクの詳細説明
+                      deadline: "2025-12-31T00:00:00"
+        '400':
+          description: バリデーションエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/tasks/{id}:
+    get:
+      summary: タスク取得
+      description: 指定されたIDのタスクを取得します
+      tags:
+        - Tasks
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: タスクID
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: エラー（タスクが見つからない、権限なし等）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+    put:
+      summary: タスク更新
+      description: 指定されたIDのタスクを更新します
+      tags:
+        - Tasks
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: タスクID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: エラー（タスクが見つからない、権限なし、バリデーションエラー等）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+    delete:
+      summary: タスク削除
+      description: 指定されたIDのタスクを削除します
+      tags:
+        - Tasks
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: タスクID
+      responses:
+        '200':
+          description: 削除成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                success:
+                  value:
+                    status: success
+                    message: タスクを削除しました
+        '400':
+          description: エラー（タスクが見つからない、権限なし等）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  # ========================================
+  # 認証API
+  # ========================================
+  /api/auth/login:
+    post:
+      summary: ログイン
+      description: メールアドレスとパスワードでログインします
+      tags:
+        - Auth
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: メールアドレス
+                password:
+                  type: string
+                  format: password
+                  description: パスワード
+            examples:
+              example1:
+                value:
+                  email: user@example.com
+                  password: password123
+      responses:
+        '200':
+          description: ログイン成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: ログイン成功
+          headers:
+            Set-Cookie:
+              description: セッションCookie
+              schema:
+                type: string
+                example: JSESSIONID=xxx; Path=/; HttpOnly
+        '400':
+          description: ログイン失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: ログインに失敗しました
+
+  /api/auth/register:
+    post:
+      summary: ユーザー登録
+      description: 新しいユーザーを登録します
+      tags:
+        - Auth
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - name
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: メールアドレス
+                password:
+                  type: string
+                  format: password
+                  description: パスワード
+                name:
+                  type: string
+                  description: ユーザー名
+            examples:
+              example1:
+                value:
+                  email: newuser@example.com
+                  password: password123
+                  name: 山田太郎
+      responses:
+        '200':
+          description: 登録成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 登録成功
+        '400':
+          description: 登録失敗
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: このメールアドレスは既に登録されています
+
+  /api/auth/logout:
+    post:
+      summary: ログアウト
+      description: ログアウトしてセッションを無効化します
+      tags:
+        - Auth
+      security:
+        - sessionAuth: []
+      responses:
+        '200':
+          description: ログアウト成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: ログアウト成功
+
+  /api/auth/status:
+    get:
+      summary: 認証状態確認
+      description: 現在の認証状態を確認します
+      tags:
+        - Auth
+      security:
+        - sessionAuth: []
+      responses:
+        '200':
+          description: 認証状態
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  authenticated:
+                    type: boolean
+                    description: 認証済みかどうか
+                  message:
+                    type: string
+                    description: メッセージ
+              examples:
+                authenticated:
+                  value:
+                    authenticated: true
+                    message: 認証済み
+                unauthenticated:
+                  value:
+                    authenticated: false
+                    message: 未認証
+
+# ========================================
+# コンポーネント定義
+# ========================================
+components:
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: JSESSIONID
+      description: Spring Securityセッション認証
+
+  schemas:
+    Task:
+      type: object
+      description: タスクエンティティ
+      properties:
+        id:
+          type: integer
+          description: タスクID
+          example: 1
+        userId:
+          type: integer
+          description: ユーザーID
+          example: 1
+        typeId:
+          type: integer
+          description: タスク種別ID
+          example: 1
+        title:
+          type: string
+          description: タスク名
+          example: サンプルタスク
+        detail:
+          type: string
+          description: タスク詳細
+          example: タスクの詳細説明
+          nullable: true
+        deadline:
+          type: string
+          format: date-time
+          description: 期限
+          example: "2025-12-31T23:59:59"
+          nullable: true
+        taskType:
+          $ref: '#/components/schemas/TaskType'
+
+    TaskType:
+      type: object
+      description: タスク種別
+      properties:
+        id:
+          type: integer
+          description: タスク種別ID
+          example: 1
+        type:
+          type: string
+          description: 種別名
+          example: 仕事
+        comment:
+          type: string
+          description: コメント
+          example: 業務関連タスク
+
+    TaskRequest:
+      type: object
+      description: タスク作成・更新リクエスト
+      required:
+        - typeId
+        - title
+      properties:
+        typeId:
+          type: integer
+          description: タスク種別ID
+          example: 1
+        title:
+          type: string
+          description: タスク名
+          example: 新しいタスク
+        detail:
+          type: string
+          description: タスク詳細
+          example: タスクの詳細説明
+          nullable: true
+        deadline:
+          type: string
+          format: date
+          description: 期限（YYYY-MM-DD形式）
+          example: "2025-12-31"
+          nullable: true
+
+    ApiResponse:
+      type: object
+      description: API共通レスポンス
+      properties:
+        status:
+          type: string
+          enum: [success, error]
+          description: 処理結果ステータス
+          example: success
+        message:
+          type: string
+          description: メッセージ
+          example: タスク一覧を取得しました
+        data:
+          type: object
+          description: データ（任意）
+          nullable: true

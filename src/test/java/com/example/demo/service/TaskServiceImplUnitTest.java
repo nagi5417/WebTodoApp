@@ -37,14 +37,14 @@ class TaskServiceImplUnitTest {
     	//空のリスト
     	List<Task> list = new ArrayList<>();
 
-        // モッククラスのI/Oをセット（findAll()の型と異なる戻り値はNG）
-        when(dao.findAll()).thenReturn(list);
+        // モッククラスのI/Oをセット（findAll(userId)の型と異なる戻り値はNG）
+        when(dao.findAll(1)).thenReturn(list);
 
         // サービスを実行
-        List<Task> actualList= taskServiceImpl.findAll();
+        List<Task> actualList= taskServiceImpl.findAll(1);
 
         // モックの指定メソッドの実行回数を検査
-        verify(dao, times(1)).findAll();
+        verify(dao, times(1)).findAll(1);
 
         // 戻り値の検査(expected, actual)
         Assertions.assertEquals(0, actualList.size());
@@ -63,14 +63,14 @@ class TaskServiceImplUnitTest {
     	list.add(task1);
     	list.add(task2);
 
-        // モッククラスのI/Oをセット（findAll()の型と異なる戻り値はNG）
-        when(dao.findAll()).thenReturn(list);
+        // モッククラスのI/Oをセット（findAll(userId)の型と異なる戻り値はNG）
+        when(dao.findAll(1)).thenReturn(list);
 
         // サービスを実行
-        List<Task> actualList= taskServiceImpl.findAll();
+        List<Task> actualList= taskServiceImpl.findAll(1);
 
         // モックの指定メソッドの実行回数を検査
-        verify(dao, times(1)).findAll();
+        verify(dao, times(1)).findAll(1);
 
         // 戻り値の検査(expected, actual)
         Assertions.assertEquals(2, actualList.size());

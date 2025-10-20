@@ -18,9 +18,11 @@ import com.example.demo.entity.Task;
 @SpringJUnitConfig
 @SpringBootTest
 @TestPropertySource(properties = {
-    "spring.datasource.initialization-mode=always",  // ←ここを変更！
+    "spring.datasource.initialization-mode=always",
     "spring.jpa.hibernate.ddl-auto=none",
-    "spring.datasource.url=jdbc:h2:mem:integrationtest;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+    "spring.datasource.url=jdbc:h2:mem:integrationtest;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+    "spring.security.oauth2.client.registration.google.client-id=test-client-id",
+    "spring.security.oauth2.client.registration.google.client-secret=test-client-secret"
 })
 @DisplayName("TaskServiceImplの結合テスト")
 class TaskServiceImplTest {
@@ -41,8 +43,8 @@ class TaskServiceImplTest {
     @Test
     @DisplayName("全件検索のテスト")
     void testFindAllCheckCount() {
-        //全件取得
-        List<Task> list = taskService.findAll();
+        //全件取得（テストユーザーID=1）
+        List<Task> list = taskService.findAll(1);
         //Taskテーブルに入っている2件が取得できているか確認
         assertEquals(2, list.size());
     }
